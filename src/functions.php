@@ -11,11 +11,17 @@ if (!function_exists('sendResponse')) {
             $response->getReasonPhrase()
         );
         header($http_line, true, $response->getStatusCode());
+
         foreach ($response->getHeaders() as $name => $values) {
-            foreach ($values as $value) {
-                header("$name: $value", false);
+            if (strtolower($name) !== 'set-cookie') {
+                header(sprintf('%s: %s', $name, implode(',', $values)), false);
+            } else {
+                foreach ($values as $value) {
+                    header(sprintf('%s: %s', $name, $value), false);
+                }
             }
         }
+
         $stream = $response->getBody();
         if ($stream->isSeekable()) {
             $stream->rewind();
