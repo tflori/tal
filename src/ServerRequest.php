@@ -2,6 +2,7 @@
 
 namespace Tal;
 
+use GuzzleHttp\Psr7\LazyOpenStream;
 use GuzzleHttp\Psr7\ServerRequest as BaseServerRequest;
 
 class ServerRequest extends BaseServerRequest
