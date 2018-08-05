@@ -239,7 +239,7 @@ class ClientResponseTest extends TestCase
     {
         $r1 = new Response(200, ['OWS' => " \t \tFoo\t \t "]);
         $r2 = (new Response())->withHeader('OWS', " \t \tFoo\t \t ");
-        $r3 = (new Response())->withAddedHeader('OWS', " \t \tFoo\t \t ");;
+        $r3 = (new Response())->withAddedHeader('OWS', " \t \tFoo\t \t ");
 
         foreach ([$r1, $r2, $r3] as $r) {
             $this->assertSame(['OWS' => ['Foo']], $r->getHeaders());

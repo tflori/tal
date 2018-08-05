@@ -3,6 +3,9 @@
     "description": "A guzzle/psr-7 wrapper to add additional functionality like sending responses and managing cookies",
     "type": "library",
     "license": "MIT",
+    "scripts": {
+        "code-style": "phpcs --standard=PSR2 src && phpcs --standard=PSR2 --ignore=example tests"
+    },
     "require": {
         "guzzlehttp/psr7": "^1.4.2"
     },
