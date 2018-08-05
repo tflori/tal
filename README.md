@@ -1,5 +1,11 @@
 # tal
 
+[![Build Status](https://travis-ci.org/tflori/tal.svg?branch=master)](https://travis-ci.org/tflori/tal)
+[![Coverage Status](https://coveralls.io/repos/github/tflori/tal/badge.svg?branch=master)](https://coveralls.io/github/tflori/tal?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/tflori/tal/v/stable.svg)](https://packagist.org/packages/tflori/tal) 
+[![Total Downloads](https://poser.pugx.org/tflori/tal/downloads.svg)](https://packagist.org/packages/tflori/tal) 
+[![License](https://poser.pugx.org/tflori/tal/license.svg)](https://packagist.org/packages/tflori/tal)
+
 This is a clone of guzzle/psr-7 with additional functionality like sending responses and managing cookies. Because they
 changed the access level of the properties to be private I was forced to copy the code instead of extending it.
 
