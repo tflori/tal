@@ -237,10 +237,6 @@ trait MessageTrait
     {
         $normalized = strtolower($header);
 
-        if (!isset($this->headerNames[$normalized])) {
-            return $this;
-        }
-
         $header = $this->headerNames[$normalized];
 
         unset($this->headers[$header], $this->headerNames[$normalized]);

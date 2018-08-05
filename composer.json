@@ -16,7 +16,6 @@
     "autoload": {
         "psr-4": {
             "Tal\\": "src"
-        },
-        "files": ["src/functions.php"]
+        }
     }
 }
