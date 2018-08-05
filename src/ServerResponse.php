@@ -2,36 +2,17 @@
 
 namespace Tal;
 
+use Psr\Http\Message\StreamInterface;
 use Tal\Psr7Extended\ServerResponseInterface;
 
 class ServerResponse extends Response implements ServerResponseInterface
 {
     use ChangeableMessageTrait;
 
-    /**
-     * Sets the specified status code and, optionally, reason phrase.
-     *
-     * If no reason phrase is specified, implementations MAY choose to default
-     * to the RFC 7231 or IANA recommended reason phrase for the response's
-     * status code.
-     *
-     * @link http://tools.ietf.org/html/rfc7231#section-6
-     * @link http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
-     * @param int $code The 3-digit integer result code to set.
-     * @param string $reasonPhrase The reason phrase to use with the
-     *     provided status code; if none is provided, implementations MAY
-     *     use the defaults as suggested in the HTTP specification.
-     * @return static
-     * @throws \InvalidArgumentException For invalid status code arguments.
-     */
+    /** {@inheritDoc} */
     public function setStatus($code, $reasonPhrase = '')
     {
-        $this->statusCode = (int) $code;
-        if ($reasonPhrase == '' && isset(static::$phrases[$this->statusCode])) {
-            $reasonPhrase = static::$phrases[$this->statusCode];
-        }
-        $this->reasonPhrase = $reasonPhrase;
-        return $this;
+        return parent::setStatus($code, $reasonPhrase);
     }
 
     /**
