@@ -49,6 +49,20 @@ class ServerResponse extends Response implements ServerResponseInterface
         return $this;
     }
 
+    public function withSetCookie(
+        $name,
+        $value = "",
+        $maxAge = 0,
+        $path = "",
+        $domain = "",
+        $secure = false,
+        $httponly = false,
+        $sameSite = false
+    ) {
+        $new = clone $this;
+        return $new->setCookie($name, $value, $maxAge, $path, $domain, $secure, $httponly, $sameSite);
+    }
+
     public function setCookie(
         $name,
         $value = "",
@@ -94,6 +108,12 @@ class ServerResponse extends Response implements ServerResponseInterface
 
         $this->addHeader('Set-Cookie', $headerLine);
         return $this;
+    }
+
+    public function withDeleteCookie($name)
+    {
+        $new = clone $this;
+        return $new->deleteCookie($name);
     }
 
     public function deleteCookie($name)
