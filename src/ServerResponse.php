@@ -17,16 +17,19 @@ class ServerResponse extends Response implements ServerResponseInterface
     /**
      * Sends this response to the client.
      *
+     * @param int $bufferSize
+     * @param Server|null $server
      * @return static
      */
-    public function send(int $bufferSize = 8192)
+    public function send(int $bufferSize = 8192, Server $server = null)
     {
+        $server = $server ?? new Server();
         foreach ($this->getHeaders() as $name => $values) {
             if (strtolower($name) !== 'set-cookie') {
-                header(sprintf('%s: %s', $name, implode(',', $values)), false);
+                $server->header(sprintf('%s: %s', $name, implode(',', $values)), false);
             } else {
                 foreach ($values as $value) {
-                    header(sprintf('%s: %s', $name, $value), false);
+                    $server->header(sprintf('%s: %s', $name, $value), false);
                 }
             }
         }
@@ -37,14 +40,14 @@ class ServerResponse extends Response implements ServerResponseInterface
             $this->getStatusCode(),
             $this->getReasonPhrase()
         );
-        header($http_line, true, $this->getStatusCode());
+        $server->header($http_line, true, $this->getStatusCode());
 
         $stream = $this->getBody();
         if ($stream->isSeekable()) {
             $stream->rewind();
         }
         while (!$stream->eof()) {
-            echo $stream->read($bufferSize);
+            $server->echo($stream->read($bufferSize));
         }
         return $this;
     }
