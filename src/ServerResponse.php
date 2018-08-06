@@ -98,7 +98,7 @@ class ServerResponse extends Response implements ServerResponseInterface
 
     public function deleteCookie($name)
     {
-        $this->setCookie($name, 'deleted', 1);
+        $this->setCookie($name, 'deleted', -1);
         return $this;
     }
 }
