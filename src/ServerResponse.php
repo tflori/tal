@@ -89,7 +89,7 @@ class ServerResponse extends Response implements ServerResponseInterface
         }
 
         if ($sameSite) {
-            $headerLine .= '; SameSite';
+            $headerLine .= '; SameSite=strict';
         }
 
         $this->addHeader('Set-Cookie', $headerLine);
