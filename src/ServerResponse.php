@@ -2,7 +2,6 @@
 
 namespace Tal;
 
-use Psr\Http\Message\StreamInterface;
 use Tal\Psr7Extended\ServerResponseInterface;
 
 class ServerResponse extends Response implements ServerResponseInterface
@@ -53,25 +52,53 @@ class ServerResponse extends Response implements ServerResponseInterface
     public function setCookie(
         $name,
         $value = "",
-        $expire = 0,
+        $maxAge = 0,
         $path = "",
         $domain = "",
         $secure = false,
-        $httponly = false
+        $httponly = false,
+        $sameSite = false
     ) {
-        $headerLine = sprintf('%s=%s', $name, urlencode($value));
-        if ($expire) {
-            $headerLine .= '; expires=' . gmdate('D, d M Y H:i:s T', time() + $expire);
-            $headerLine .= '; max-age=' . $expire;
+        if (preg_match('/[=,; \t\r\n\013\014]/', $name)) {
+            throw new \InvalidArgumentException(
+                'Cookie names cannot contain any of the following \'=,; \t\r\n\013\014\''
+            );
         }
-        // @todo prepare the header with all options given
+
+        $headerLine = sprintf('%s=%s', $name, urlencode($value));
+
+        if ($maxAge) {
+            $headerLine .= '; expires=' . gmdate('D, d M Y H:i:s T', time() + $maxAge);
+            $headerLine .= '; Max-Age=' . $maxAge;
+        }
+
+        if ($path) {
+            $headerLine .= '; path=' . $path;
+        }
+
+        if ($domain) {
+            $headerLine .= '; domain=' . $domain;
+        }
+
+        if ($secure) {
+            $headerLine .= '; secure';
+        }
+
+        if ($httponly) {
+            $headerLine .= '; HttpOnly';
+        }
+
+        if ($sameSite) {
+            $headerLine .= '; SameSite';
+        }
+
         $this->addHeader('Set-Cookie', $headerLine);
         return $this;
     }
 
     public function deleteCookie($name)
     {
-        $this->setCookie($name, 'deleted', -1);
+        $this->setCookie($name, 'deleted', 1);
         return $this;
     }
 }
