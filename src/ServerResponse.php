@@ -20,16 +20,8 @@ class ServerResponse extends Response implements ServerResponseInterface
      *
      * @return static
      */
-    public function send()
+    public function send(int $bufferSize = 8192)
     {
-        $http_line = sprintf(
-            'HTTP/%s %s %s',
-            $this->getProtocolVersion(),
-            $this->getStatusCode(),
-            $this->getReasonPhrase()
-        );
-        header($http_line, true, $this->getStatusCode());
-
         foreach ($this->getHeaders() as $name => $values) {
             if (strtolower($name) !== 'set-cookie') {
                 header(sprintf('%s: %s', $name, implode(',', $values)), false);
@@ -40,12 +32,20 @@ class ServerResponse extends Response implements ServerResponseInterface
             }
         }
 
+        $http_line = sprintf(
+            'HTTP/%s %s %s',
+            $this->getProtocolVersion(),
+            $this->getStatusCode(),
+            $this->getReasonPhrase()
+        );
+        header($http_line, true, $this->getStatusCode());
+
         $stream = $this->getBody();
         if ($stream->isSeekable()) {
             $stream->rewind();
         }
         while (!$stream->eof()) {
-            echo $stream->read(1024 * 8);
+            echo $stream->read($bufferSize);
         }
         return $this;
     }
