@@ -360,13 +360,59 @@ class ServerRequest extends Request implements ServerRequestInterface
         return $new;
     }
 
+    /**
+     * Get cookie by name
+     *
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
     public function getCookie(string $name, $default = null)
     {
         return $this->getCookieParams()[$name] ?? $default;
     }
 
-    public function hasCookie(string $name)
+    /**
+     * Check if cookie is set
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function hasCookie(string $name): bool
     {
         return isset($this->getCookieParams()[$name]);
+    }
+
+    /**
+     * Get the relative path to $base.
+     *
+     * If $base is not given it will be determined by $_SERVER['SCRIPT_NAME'].
+     *
+     * e. g. The path is `/shop/products/foo` and the SCRIPT_NAME is `/shop/index.php` the result would be
+     * `/products/foo`.
+     *
+     * @param string $base The base where you want to start without slash
+     * @return string The path including the first slash
+     */
+    public function getRelativePath(string $base = null): string
+    {
+        if ($base === null) {
+            $base = $this->getBase();
+        }
+
+        return substr($this->getUri()->getPath(), strlen(rtrim($base)));
+    }
+
+    /**
+     * Get the domain absolute path to your application.
+     *
+     * If your software is installed on a separate (sub-)domain this will return '/' otherwise the path to your
+     * php file.
+     *
+     * @return string
+     */
+    public function getBase(): string
+    {
+        return dirname($this->getServerParams()['SCRIPT_NAME']);
     }
 }

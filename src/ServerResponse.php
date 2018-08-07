@@ -17,8 +17,8 @@ class ServerResponse extends Response implements ServerResponseInterface
     /**
      * Sends this response to the client.
      *
-     * @param int $bufferSize
-     * @param Server|null $server
+     * @param int $bufferSize Send maximum this amount of bytes.
+     * @param Server $server For testing proposes you can provide a Server object
      * @return static
      */
     public function send(int $bufferSize = 8192, Server $server = null)
@@ -34,13 +34,13 @@ class ServerResponse extends Response implements ServerResponseInterface
             }
         }
 
-        $http_line = sprintf(
+        $httpLine = sprintf(
             'HTTP/%s %s %s',
             $this->getProtocolVersion(),
             $this->getStatusCode(),
             $this->getReasonPhrase()
         );
-        $server->header($http_line, true, $this->getStatusCode());
+        $server->header($httpLine, true, $this->getStatusCode());
 
         $stream = $this->getBody();
         if ($stream->isSeekable()) {
@@ -52,6 +52,22 @@ class ServerResponse extends Response implements ServerResponseInterface
         return $this;
     }
 
+    /**
+     * Returns an instance with the Set-Cookie header.
+     *
+     * Instead of providing a timestamp it expects an max age in seconds.
+     *
+     * @link http://php.net/manual/en/function.setcookie.php
+     * @param $name
+     * @param string $value
+     * @param int $maxAge
+     * @param string $path
+     * @param string $domain
+     * @param bool $secure
+     * @param bool $httponly
+     * @param bool $sameSite
+     * @return ServerResponse
+     */
     public function withSetCookie(
         $name,
         $value = "",
@@ -66,6 +82,22 @@ class ServerResponse extends Response implements ServerResponseInterface
         return $new->setCookie($name, $value, $maxAge, $path, $domain, $secure, $httponly, $sameSite);
     }
 
+    /**
+     * Adds a Set-Cookie header.
+     *
+     * Instead of providing a timestamp it expects an max age in seconds.
+     *
+     * @link http://php.net/manual/en/function.setcookie.php
+     * @param $name
+     * @param string $value
+     * @param int $maxAge
+     * @param string $path
+     * @param string $domain
+     * @param bool $secure
+     * @param bool $httponly
+     * @param bool $sameSite
+     * @return $this
+     */
     public function setCookie(
         $name,
         $value = "",
@@ -85,8 +117,8 @@ class ServerResponse extends Response implements ServerResponseInterface
         $headerLine = sprintf('%s=%s', $name, urlencode($value));
 
         if ($maxAge) {
-            $headerLine .= '; expires=' . gmdate('D, d M Y H:i:s T', time() + $maxAge);
-            $headerLine .= '; Max-Age=' . $maxAge;
+            $headerLine .= '; expires=' . gmdate('r', time() + $maxAge);
+            $headerLine .= '; Max-Age=' . max($maxAge, 0);
         }
 
         if ($path) {
