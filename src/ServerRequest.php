@@ -413,6 +413,6 @@ class ServerRequest extends Request implements ServerRequestInterface
      */
     public function getBase(): string
     {
-        return dirname($this->getServerParams()['SCRIPT_NAME']);
+        return dirname($this->getServerParams()['SCRIPT_NAME'] ?? '/index.php');
     }
 }

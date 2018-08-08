@@ -453,6 +453,14 @@ class ServerRequestTest extends TestCase
         $this->assertSame($params, $request2->getCookieParams());
     }
 
+    public function testGetCookie()
+    {
+        $request = (new ServerRequest('GET', '/'))->withCookieParams(['name' => 'value']);
+
+        $this->assertTrue($request->hasCookie('name'));
+        $this->assertSame('value', $request->getCookie('name'));
+    }
+
     public function testQueryParams()
     {
         $request1 = new ServerRequest('GET', '/');
@@ -518,5 +526,26 @@ class ServerRequestTest extends TestCase
 
         $this->assertSame([], $requestWithoutAttribute->getAttributes());
         $this->assertSame('different-default', $requestWithoutAttribute->getAttribute('name', 'different-default'));
+    }
+
+    public function testGetBaseWithoutScriptName()
+    {
+        $request = new ServerRequest('GET', '/');
+
+        $this->assertSame('/', $request->getBase());
+    }
+
+    public function testGetBaseWithScriptName()
+    {
+        $request = new ServerRequest('GET', '/shop/product/42', [], null, '1.1', ['SCRIPT_NAME' => '/shop/index.php']);
+
+        self::assertSame('/shop', $request->getBase());
+    }
+
+    public function testGetRelativePath()
+    {
+        $request = new ServerRequest('GET', '/shop/product/42', [], null, '1.1', ['SCRIPT_NAME' => '/shop/index.php']);
+
+        self::assertSame('/product/42', $request->getRelativePath());
     }
 }
