@@ -400,7 +400,7 @@ class ServerRequest extends Request implements ServerRequestInterface
             $base = $this->getBase();
         }
 
-        return substr($this->getUri()->getPath(), strlen(rtrim($base)));
+        return substr($this->getUri()->getPath(), strlen(rtrim($base, '/')));
     }
 
     /**

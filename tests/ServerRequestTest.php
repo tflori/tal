@@ -548,4 +548,11 @@ class ServerRequestTest extends TestCase
 
         self::assertSame('/product/42', $request->getRelativePath());
     }
+
+    public function testGetRelativePathFromRoot()
+    {
+        $request = new ServerRequest('GET', '/product/42');
+
+        self::assertSame('/product/42', $request->getRelativePath('/'));
+    }
 }
