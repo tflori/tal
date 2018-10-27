@@ -7,7 +7,8 @@
         "code-style": "phpcs --standard=PSR2 src && phpcs --standard=PSR2 --ignore=example tests"
     },
     "require": {
-        "guzzlehttp/psr7": "^1.4.2"
+        "guzzlehttp/psr7": "^1.4.2",
+        "ralouphie/getallheaders": "^2.0.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.2.7",
